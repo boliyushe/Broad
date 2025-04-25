@@ -3,381 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>足球比赛列表</title>
+    <title>比分板2</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #f5f5f5;
+            background-color: #ffffff;
         }
         .container {
-            max-width: 1200px;
+            width: 100%;
+            padding: 0;
+        }
+        .scoreboard {
+            width: 302px;
             margin: 0 auto;
-            padding: 20px;
+            background-color: #dbd7d7;
+
+            position: relative;
         }
-        .add-match-btn {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            padding: 15px 30px;
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 16px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-            z-index: 100;
-        }
-        .match-card {
+        
+        /* 主要内容区域 */
+        .main-content {
             display: flex;
-            align-items: center;
-            padding: 20px;
-            border-bottom: 1px solid #ddd;
-            gap: 30px;
-            background-color: white;
-            margin-bottom: 10px;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            justify-content: space-between;
+            padding: 5px;
         }
-        .league-info {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            min-width: 150px;
-        }
-        .league-logo {
-            width: 40px;
-            height: 40px;
-            object-fit: contain;
-        }
-        .team-logo {
-            width: 50px;
-            height: 50px;
-            object-fit: contain;
-        }
-        .teams-info {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex: 1;
-        }
+        
+        /* 队伍样式 */
         .team {
             display: flex;
+            flex-direction: column;
             align-items: center;
+            width: 100px;
+        }
+        
+        .team-logo {
+            width: 100px;
+            height: 100px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        .team-name {
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 3px;
+            background-color: #333;
+            width: 100%;
+            height: 35px;
+            text-align: center;
+            padding: 2px 0;
+        }
+        
+        /* 中间内容区域 */
+        .center-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin-left: -10px;
+            margin-right: -10px;
+        }
+        
+        /* 联赛logo */
+        .league-logo {
+            width: 87px;
+            height: 87px;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            position: absolute;
+            margin-top: 6px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* 计时器 */
+        .timer-section {
+            background-color: #2d1db8;
+            color: #ffffff;
+            text-align: center;
+            padding: 5px 0;
+            margin-bottom: 1px;
+            width: 90px;
+        }
+        
+        .timer-display {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        
+        /* 比分 */
+        .score-section {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            width: 90px;
+            height: 45px;
+            border: 1px solid #0055ff;
+            margin-bottom: -98px;
+        }
+        
+        .score-display {
+            font-size: 36px;
+            font-weight: bold;
+            color: #000;
+        }
+        
+        .vs {
+            font-size: 20px;
+            color: #000;
+            margin: 0 5px;
+        }
+        
+        img {
+            max-width: 90%;
+            max-height: 90%;
+            object-fit: contain;
+        }
+        
+        /* 控制面板样式保持不变 */
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .control-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .btn-container {
+            display: flex;
             gap: 10px;
         }
-        .vs {
-            margin: 0 20px;
-            font-weight: bold;
-        }
-        .match-time {
-            min-width: 120px;
-            text-align: center;
-        }
-        .scoreboard-btn {
-            padding: 8px 15px;
-            background-color: #2196F3;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.5);
-            z-index: 200;
-        }
-        .modal-content {
-            background-color: white;
-            margin: 50px auto;
-            padding: 20px;
-            width: 80%;
-            max-width: 600px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-weight: bold;
-        }
-        .form-group input, .form-group select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        .team-logo-upload {
-            border: 2px dashed #ddd;
-            padding: 20px;
-            text-align: center;
-            margin-top: 10px;
-            cursor: pointer;
-            border-radius: 4px;
-        }
-        .team-logo-upload:hover {
-            border-color: #4CAF50;
-            background-color: rgba(76, 175, 80, 0.05);
-        }
-        .team-logo-preview {
-            max-width: 100px;
-            max-height: 100px;
-            display: none;
-            margin: 10px auto;
-        }
         .btn {
-            padding: 10px 15px;
+            padding: 8px 15px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
             font-size: 14px;
-            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         }
         .btn-primary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-success {
             background-color: #4CAF50;
             color: white;
         }
-        .btn-secondary {
-            background-color: #f1f1f1;
-            color: #333;
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
         }
-        .empty-state {
+        .btn-warning {
+            background-color: #FF9800;
+            color: white;
+        }
+        .timer-input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80px;
             text-align: center;
-            padding: 50px 0;
-            color: #888;
+            margin-bottom: 10px;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
-    <div class="container" id="matchList">
-        <!-- 比赛列表将通过 JavaScript 动态生成 -->
-        <div id="emptyState" class="empty-state">
-            <h2>暂无比赛</h2>
-            <p>点击右下角按钮添加新比赛</p>
+    <div class="container">
+        <div class="scoreboard">
+            <!-- 联赛logo (顶部超出范围) -->
+            <div class="league-logo">
+                <img src="" alt="联赛logo" id="leagueLogo">
+            </div>
+            
+            <!-- 主要内容区域 -->
+            <div class="main-content">
+                <!-- 主队 -->
+                <div class="team">
+                    <div class="team-logo">
+                        <img src="" alt="主队logo" id="homeLogoImg">
+                    </div>
+                    <div class="team-name" id="homeTeamName">ATM</div>
+                </div>
+                
+                <!-- 中间内容：计时器和比分 -->
+                <div class="center-content">
+                    <div class="timer-section">
+                        <div class="timer-display" id="timer">00:00</div>
+                    </div>
+                    
+                    <div class="score-section">
+                        <div class="score-display" id="homeScore">1</div>
+                        <div class="vs">-</div>
+                        <div class="score-display" id="awayScore">0</div>
+                    </div>
+                </div>
+                
+                <!-- 客队 -->
+                <div class="team">
+                    <div class="team-logo">
+                        <img src="" alt="客队logo" id="awayLogoImg">
+                    </div>
+                    <div class="team-name" id="awayTeamName">RAY</div>
+                </div>
+            </div>
         </div>
-    </div>
-
-    <!-- 添加比赛按钮 -->
-    <button class="add-match-btn" onclick="openAddMatchModal()">添加比赛</button>
-
-    <!-- 添加比赛的模态框 -->
-    <div id="addMatchModal" class="modal">
-        <div class="modal-content">
-            <h2>添加新比赛</h2>
-            <form id="addMatchForm">
-                <div class="form-group">
-                    <label>联赛名称</label>
-                    <input type="text" id="leagueName" placeholder="请输入联赛名称">
-                    <div class="team-logo-upload" id="leagueLogoUpload">
-                        <span>点击或拖放上传联赛logo</span>
-                        <img id="leagueLogoPreview" class="team-logo-preview">
-                    </div>
+        
+        <div class="controls-container">
+            <div class="control-group">
+                <div class="control-title">计时器控制</div>
+                <input type="text" id="customTime" class="timer-input" placeholder="例如: 48:51" />
+                <div class="btn-container">
+                    <button class="btn btn-primary" id="setCustomTime">
+                        <span>设置时间</span>
+                    </button>
+                    <button class="btn btn-primary" id="startTimer">
+                        <span>开始计时</span>
+                    </button>
+                    <button class="btn btn-warning" id="pauseTimer">
+                        <span>暂停计时</span>
+                    </button>
+                    <button class="btn btn-danger" id="resetTimer">
+                        <span>重置计时</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>比赛时间</label>
-                    <input type="text" id="matchTime" placeholder="请输入比赛时间" required>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">主队比分控制</div>
+                <div class="btn-container">
+                    <button class="btn btn-success" onclick="updateScore('home', 1)">
+                        <span>增加主队比分</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="updateScore('home', -1)">
+                        <span>减少主队比分</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>主队名称</label>
-                    <input type="text" id="homeTeamName" required>
-                    <div class="team-logo-upload" id="homeTeamLogoUpload">
-                        <span>点击或拖放上传主队logo</span>
-                        <img id="homeTeamLogoPreview" class="team-logo-preview">
-                    </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">客队比分控制</div>
+                <div class="btn-container">
+                    <button class="btn btn-success" onclick="updateScore('away', 1)">
+                        <span>增加客队比分</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="updateScore('away', -1)">
+                        <span>减少客队比分</span>
+                    </button>
                 </div>
-                <div class="form-group">
-                    <label>客队名称</label>
-                    <input type="text" id="awayTeamName" required>
-                    <div class="team-logo-upload" id="awayTeamLogoUpload">
-                        <span>点击或拖放上传客队logo</span>
-                        <img id="awayTeamLogoPreview" class="team-logo-preview">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn btn-primary">保存</button>
-                    <button type="button" class="btn btn-secondary" onclick="closeAddMatchModal()">取消</button>
-                </div>
-            </form>
+            </div>
         </div>
     </div>
 
     <script>
-        // 检查是否有比赛
-        function checkEmptyState() {
-            const matchCards = document.querySelectorAll('.match-card');
-            const emptyState = document.getElementById('emptyState');
+        let timerInterval;
+        let seconds = 0;
+        let isRunning = false;
+
+        function updateTimer() {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timer').textContent = 
+                ` ${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
             
-            if (matchCards.length === 0) {
-                emptyState.style.display = 'block';
-            } else {
-                emptyState.style.display = 'none';
+            // 当计时器达到45:00时自动暂停
+            if (minutes == 45 && remainingSeconds === 0 && isRunning) {
+                isRunning = false;
+                clearInterval(timerInterval);
             }
         }
 
-        // 页面加载时检查
-        window.onload = function() {
-            checkEmptyState();
+        document.getElementById('startTimer').onclick = function() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
         };
 
-        // 模态框操作
-        function openAddMatchModal() {
-            document.getElementById('addMatchModal').style.display = 'block';
-        }
+        document.getElementById('pauseTimer').onclick = function() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        };
 
-        function closeAddMatchModal() {
-            document.getElementById('addMatchModal').style.display = 'none';
-            document.getElementById('addMatchForm').reset();
-            document.getElementById('homeTeamLogoPreview').style.display = 'none';
-            document.getElementById('awayTeamLogoPreview').style.display = 'none';
-            document.getElementById('leagueLogoPreview').style.display = 'none';
-        }
+        document.getElementById('resetTimer').onclick = function() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            seconds = 0;
+            updateTimer();
+        };
 
-        // 处理图片上传
-        function setupImageUpload(uploadId, previewId) {
-            const uploadDiv = document.getElementById(uploadId);
-            const preview = document.getElementById(previewId);
-
-            uploadDiv.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadDiv.style.borderColor = '#4CAF50';
-                uploadDiv.style.backgroundColor = 'rgba(76, 175, 80, 0.1)';
-            });
-
-            uploadDiv.addEventListener('dragleave', (e) => {
-                e.preventDefault();
-                uploadDiv.style.borderColor = '#ddd';
-                uploadDiv.style.backgroundColor = '';
-            });
-
-            uploadDiv.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadDiv.style.borderColor = '#ddd';
-                uploadDiv.style.backgroundColor = '';
-                handleImageFile(e.dataTransfer.files[0], preview);
-            });
-
-            uploadDiv.addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = 'image/*';
-                input.onchange = (e) => handleImageFile(e.target.files[0], preview);
-                input.click();
-            });
-        }
-
-        function handleImageFile(file, preview) {
-            if (file && file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            }
-        }
-
-        // 初始化所有图片上传区域
-        setupImageUpload('leagueLogoUpload', 'leagueLogoPreview');
-        setupImageUpload('homeTeamLogoUpload', 'homeTeamLogoPreview');
-        setupImageUpload('awayTeamLogoUpload', 'awayTeamLogoPreview');
-
-        // 处理表单提交
-        document.getElementById('addMatchForm').onsubmit = function(e) {
-            e.preventDefault();
-            const defaultLogo = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9ImN1cnJlbnRDb2xvciIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PC9zdmc+';
-            
-            const leagueLogoPreview = document.getElementById('leagueLogoPreview');
-            const homeTeamLogoPreview = document.getElementById('homeTeamLogoPreview');
-            const awayTeamLogoPreview = document.getElementById('awayTeamLogoPreview');
-            
-            const newMatch = {
-                events: {
-                    name: document.getElementById('leagueName').value || '未知联赛',
-                    image: leagueLogoPreview.style.display === 'block' ? leagueLogoPreview.src : defaultLogo
-                },
-                localStartTime: document.getElementById('matchTime').value,
-                teams: [
-                    {
-                        name: document.getElementById('homeTeamName').value,
-                        image: homeTeamLogoPreview.style.display === 'block' ? homeTeamLogoPreview.src : defaultLogo
-                    },
-                    {
-                        name: document.getElementById('awayTeamName').value,
-                        image: awayTeamLogoPreview.style.display === 'block' ? awayTeamLogoPreview.src : defaultLogo
+        document.getElementById('setCustomTime').onclick = function() {
+            const customTimeInput = document.getElementById('customTime').value;
+            if (customTimeInput) {
+                // 解析输入的时间格式 (MM:SS)
+                const timeParts = customTimeInput.split(':');
+                if (timeParts.length === 2) {
+                    const minutes = parseInt(timeParts[0], 10);
+                    const secs = parseInt(timeParts[1], 10);
+                    
+                    if (!isNaN(minutes) && !isNaN(secs) && minutes >= 0 && secs >= 0 && secs < 60) {
+                        // 停止当前计时器
+                        isRunning = false;
+                        clearInterval(timerInterval);
+                        
+                        // 设置新的时间
+                        seconds = minutes * 60 + secs;
+                        updateTimer();
+                    } else {
+                        alert('请输入有效的时间格式 (分钟:秒钟)');
                     }
-                ]
-            };
-    
-            const matchCard = createMatchCard(newMatch);
-            document.getElementById('matchList').insertAdjacentHTML('afterbegin', matchCard);
-            closeAddMatchModal();
-            checkEmptyState(); // 更新空状态显示
+                } else {
+                    alert('请按照 MM:SS 格式输入时间');
+                }
+            }
         };
-    
-        // 创建比赛卡片
-        function createMatchCard(match) {
-            return `
-                <div class="match-card">
-                    <div class="league-info">
-                        <img class="league-logo" src="${match.events.image}" alt="${match.events.name}">
-                        <span>${match.events.name}</span>
-                    </div>
-                    <div class="match-time">
-                        ${match.localStartTime}
-                    </div>
-                    <div class="teams-info">
-                        <div class="team">
-                            <img class="team-logo" src="${match.teams[0].image}" alt="${match.teams[0].name}">
-                            <span>${match.teams[0].name}</span>
-                        </div>
-                        <span class="vs">VS</span>
-                        <div class="team">
-                            <img class="team-logo" src="${match.teams[1].image}" alt="${match.teams[1].name}">
-                            <span>${match.teams[1].name}</span>
-                        </div>
-                    </div>
-                    <button class="scoreboard-btn" onclick="openScoreboard('${Date.now()}', '${match.teams[0].name}', '${match.teams[1].name}')">
-                        打开比分版
-                    </button>
-                </div>
-            `;
+
+        function updateScore(team, change) {
+            const scoreElement = document.getElementById(`${team}Score`);
+            let score = parseInt(scoreElement.textContent) + change;
+            score = Math.max(0, score); // 确保分数不小于0
+            scoreElement.textContent = score;
         }
 
-        // 打开比分版
-        function openScoreboard(id, homeTeam, awayTeam) {
-            const matchCard = event.target.closest('.match-card');
-            const matchTime = matchCard.querySelector('.match-time').textContent.trim();
-            
-            // 获取图片元素
-            const leagueLogoElement = matchCard.querySelector('.league-logo');
-            const homeTeamLogoElement = matchCard.querySelector('.team:first-child .team-logo');
-            const awayTeamLogoElement = matchCard.querySelector('.team:last-child .team-logo');
-            
-            // 保存图片数据到本地存储
-            sessionStorage.setItem('leagueLogo', leagueLogoElement.src);
-            sessionStorage.setItem('homeTeamLogo', homeTeamLogoElement.src);
-            sessionStorage.setItem('awayTeamLogo', awayTeamLogoElement.src);
-            
-            // 构建URL参数
-            const params = new URLSearchParams();
-            params.set('homeTeam', homeTeam);
-            params.set('awayTeam', awayTeam);
-            params.set('matchTime', matchTime);
-            
-            // 打开新窗口
-            window.open(`scoreboard.html?${params.toString()}`, '_blank');
-        }
+        // 初始化
+        window.onload = function() {
+            try {
+                // 获取URL参数
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                // 设置队名
+                const homeTeam = urlParams.get('homeTeam') || '主队';
+                const awayTeam = urlParams.get('awayTeam') || '客队';
+                document.getElementById('homeTeamName').textContent = homeTeam;
+                document.getElementById('awayTeamName').textContent = awayTeam;
+                
+                // 设置初始时间
+                document.getElementById('timer').textContent = '00:00';
+                seconds = 0;
+                
+                // 从 sessionStorage 获取图片 URL
+                const leagueLogo = sessionStorage.getItem('leagueLogo');
+                const homeTeamLogo = sessionStorage.getItem('homeTeamLogo');
+                const awayTeamLogo = sessionStorage.getItem('awayTeamLogo');
+                
+                console.log("获取到的图片URL:", {
+                    leagueLogo,
+                    homeTeamLogo,
+                    awayTeamLogo
+                });
+                
+                // 设置图片
+                document.getElementById('leagueLogo').src = leagueLogo || '';
+                document.getElementById('homeLogoImg').src = homeTeamLogo || '';
+                document.getElementById('awayLogoImg').src = awayTeamLogo || '';
+                
+                // 设置初始比分
+                document.getElementById('homeScore').textContent = '1';
+                document.getElementById('awayScore').textContent = '0';
+                
+            } catch (error) {
+                console.error('Error loading match data:', error);
+            }
+        };
     </script>
 </body>
 </html>
