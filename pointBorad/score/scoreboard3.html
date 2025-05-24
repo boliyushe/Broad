@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>比分板</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #d4cbcb;
+        }
+        .container {
+            width: 100%;
+            padding: 0;
+        }
+        .scoreboard {
+            display: grid;
+            grid-template-columns: auto auto auto auto;
+            grid-gap: 1px;
+            width: 464px;
+            height: 70px;
+           
+            background-color: #000;
+            margin: 0;
+            position: relative;
+        }
+        .match-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 1px;
+        }
+        .left-section {
+            grid-column: 1;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            height: 70px;
+            padding: 0 0px;
+        }
+        .right-section {
+            grid-column: 4;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 70px;
+            padding: 0 18px;
+        }
+        .score-section {
+            grid-column: 2;
+            background-color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            
+            height: 70px;
+            padding: 0 19px;
+        }
+        .team-section2 {
+            grid-column: 3;
+            background-color: #fff;
+            display: flex;
+            align-items: center;
+            height: 70px;
+            padding: 0 0px;
+        }
+        .team-section {
+            display: flex;
+            align-items: center;
+        }
+        .team-logo {
+            width: 70px;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 0px;
+        }
+        .team-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .team-name {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 0 15px;
+            white-space: nowrap;
+            color: #000;
+        }
+        .score-number {
+            font-size: 47px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .score-separator {
+            margin: 0 5px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #fff;
+        }
+        .timer-display {
+            font-size: 44px;
+            font-weight: bold;
+            color: #fff;
+            min-width: 60px;
+            text-align: center;
+        }
+        .controls-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 30px;
+            padding: 20px;
+        }
+        .control-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #fff;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e0e0e0;
+        }
+        .control-title {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        .btn-container {
+            display: flex;
+            gap: 10px;
+        }
+        .btn {
+            padding: 8px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
+        .btn-primary {
+            background-color: #2196F3;
+            color: white;
+        }
+        .btn-success {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .btn-danger {
+            background-color: #f44336;
+            color: white;
+        }
+        .btn-warning {
+            background-color: #FF9800;
+            color: white;
+        }
+        .timer-input {
+            padding: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            width: 80px;
+            text-align: center;
+            margin-bottom: 10px;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="scoreboard">
+            <div class="left-section">
+                <!-- 主队信息 -->
+                <div class="team-section">
+                    <div class="team-logo">
+                        <img src="" alt="主队logo" id="homeLogoImg">
+                    </div>
+                    <div class="team-name" id="homeTeamName">RMA</div>
+                </div>
+            </div>
+            
+            <!-- 比分部分 -->
+            <div class="score-section">
+                <div class="score-number" id="homeScore">0</div>
+                <div class="score-separator">-</div>
+                <div class="score-number" id="awayScore">0</div>
+            </div>
+            
+            <!-- 客队信息 -->
+            <div class="team-section2">
+                <div class="team-name" id="awayTeamName">RSO</div>
+                <div class="team-logo">
+                    <img src="" alt="客队logo" id="awayLogoImg">
+                </div>
+            </div>
+            
+            <!-- 时间信息 -->
+            <div class="right-section">
+                <div class="timer-display" id="timer">1:25</div>
+            </div>
+        </div>
+        
+        <div class="controls-container">
+            <div class="control-group">
+                <div class="control-title">计时器控制</div>
+                <input type="text" id="customTime" class="timer-input" placeholder="例如: 48:51" />
+                <div class="btn-container">
+                    <button class="btn btn-primary" id="setCustomTime">
+                        <span>设置时间</span>
+                    </button>
+                    <button class="btn btn-primary" id="startTimer">
+                        <span>开始计时</span>
+                    </button>
+                    <button class="btn btn-warning" id="pauseTimer">
+                        <span>暂停计时</span>
+                    </button>
+                    <button class="btn btn-danger" id="resetTimer">
+                        <span>重置计时</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">主队比分控制</div>
+                <div class="btn-container">
+                    <button class="btn btn-success" onclick="updateScore('home', 1)">
+                        <span>增加主队比分</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="updateScore('home', -1)">
+                        <span>减少主队比分</span>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="control-group">
+                <div class="control-title">客队比分控制</div>
+                <div class="btn-container">
+                    <button class="btn btn-success" onclick="updateScore('away', 1)">
+                        <span>增加客队比分</span>
+                    </button>
+                    <button class="btn btn-danger" onclick="updateScore('away', -1)">
+                        <span>减少客队比分</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let timerInterval;
+        let seconds = 85; // 初始时间 1:25 (85秒)
+        let isRunning = false;
+
+        function updateTimer() {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            document.getElementById('timer').textContent = 
+                `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
+            
+            // 当计时器达到45:00时自动暂停
+            if (minutes == 45 && remainingSeconds === 0 && isRunning) {
+                isRunning = false;
+                clearInterval(timerInterval);
+            }
+        }
+
+        document.getElementById('startTimer').onclick = function() {
+            if (!isRunning) {
+                isRunning = true;
+                timerInterval = setInterval(() => {
+                    seconds++;
+                    updateTimer();
+                }, 1000);
+            }
+        };
+
+        document.getElementById('pauseTimer').onclick = function() {
+            isRunning = false;
+            clearInterval(timerInterval);
+        };
+
+        document.getElementById('resetTimer').onclick = function() {
+            isRunning = false;
+            clearInterval(timerInterval);
+            seconds = 0;
+            updateTimer();
+        };
+
+        document.getElementById('setCustomTime').onclick = function() {
+            const customTimeInput = document.getElementById('customTime').value;
+            if (customTimeInput) {
+                // 解析输入的时间格式 (MM:SS)
+                const timeParts = customTimeInput.split(':');
+                if (timeParts.length === 2) {
+                    const minutes = parseInt(timeParts[0], 10);
+                    const secs = parseInt(timeParts[1], 10);
+                    
+                    if (!isNaN(minutes) && !isNaN(secs) && minutes >= 0 && secs >= 0 && secs < 60) {
+                        // 停止当前计时器
+                        isRunning = false;
+                        clearInterval(timerInterval);
+                        
+                        // 设置新的时间
+                        seconds = minutes * 60 + secs;
+                        updateTimer();
+                    } else {
+                        alert('请输入有效的时间格式 (分钟:秒钟)');
+                    }
+                } else {
+                    alert('请按照 MM:SS 格式输入时间');
+                }
+            }
+        };
+
+        function updateScore(team, change) {
+            const scoreElement = document.getElementById(`${team}Score`);
+            let score = parseInt(scoreElement.textContent) + change;
+            score = Math.max(0, score); // 确保分数不小于0
+            scoreElement.textContent = score;
+        }
+
+        // 初始化
+        window.onload = function() {
+            try {
+                // 获取URL参数
+                const urlParams = new URLSearchParams(window.location.search);
+                
+                // 设置队名
+                const homeTeam = urlParams.get('homeTeam') || 'RMA';
+                const awayTeam = urlParams.get('awayTeam') || 'RSO';
+                document.getElementById('homeTeamName').textContent = homeTeam;
+                document.getElementById('awayTeamName').textContent = awayTeam;
+                
+                // 设置初始时间为1:25
+                document.getElementById('timer').textContent = '1:25';
+                
+                // 从 sessionStorage 获取图片 URL
+                const homeTeamLogo = sessionStorage.getItem('homeTeamLogo');
+                const awayTeamLogo = sessionStorage.getItem('awayTeamLogo');
+                
+                console.log("获取到的图片URL:", {
+                    homeTeamLogo,
+                    awayTeamLogo
+                });
+                
+                // 设置图片
+                document.getElementById('homeLogoImg').src = homeTeamLogo || '';
+                document.getElementById('awayLogoImg').src = awayTeamLogo || '';
+                
+            } catch (error) {
+                console.error('Error loading match data:', error);
+            }
+        };
+    </script>
+</body>
+</html>
