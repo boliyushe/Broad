@@ -110,6 +110,24 @@
             min-width: 60px;
             text-align: center;
         }
+        .left-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #ff0000;
+            min-width: 60px;
+            text-align: center;
+            text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000;
+            animation: glow 1.5s ease-in-out infinite alternate;
+        }
+        
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000;
+            }
+            to {
+                text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000, 0 0 30px #ff0000, 0 0 40px #ff0000;
+            }
+        }
         .controls-container {
             display: flex;
             flex-wrap: wrap;
@@ -231,6 +249,9 @@
                     <button class="btn btn-danger" id="resetTimer">
                         <span>重置计时</span>
                     </button>
+                    <button class="btn btn-danger" id="setLeftStatus">
+                        <span>暂时离开</span>
+                    </button>
                 </div>
             </div>
             
@@ -264,6 +285,7 @@
         let timerInterval;
         let seconds = 85; // 初始时间 1:25 (85秒)
         let isRunning = false;
+        let isLeftStatus = false;
 
         function updateTimer() {
             const minutes = Math.floor(seconds / 60);
@@ -279,7 +301,7 @@
         }
 
         document.getElementById('startTimer').onclick = function() {
-            if (!isRunning) {
+            if (!isRunning && !isLeftStatus) {
                 isRunning = true;
                 timerInterval = setInterval(() => {
                     seconds++;
@@ -295,9 +317,20 @@
 
         document.getElementById('resetTimer').onclick = function() {
             isRunning = false;
+            isLeftStatus = false;
             clearInterval(timerInterval);
             seconds = 0;
             updateTimer();
+            document.getElementById('timer').textContent = '0:00';
+            document.getElementById('timer').className = 'timer-display';
+        };
+
+        document.getElementById('setLeftStatus').onclick = function() {
+            isRunning = false;
+            isLeftStatus = true;
+            clearInterval(timerInterval);
+            document.getElementById('timer').textContent = 'LIVE';
+            document.getElementById('timer').className = 'left-text';
         };
 
         document.getElementById('setCustomTime').onclick = function() {
