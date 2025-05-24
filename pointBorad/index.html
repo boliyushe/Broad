@@ -354,6 +354,9 @@
                 <button class="scoreboard-btn" onclick="openScoreboard2('${Date.now()}', '${match.teams[0].name}', '${match.teams[1].name}')">
                     比分版2
                 </button>
+                <button class="scoreboard-btn" onclick="openScoreboard3('${Date.now()}', '${match.teams[0].name}', '${match.teams[1].name}')">
+                    比分版3
+                </button>
             </div>
         </div>
     `;
@@ -381,7 +384,7 @@
             params.set('matchTime', matchTime);
             
             // 打开新窗口
-            window.open(`https://boliyushe.github.io/Broad/pointBorad/score/scoreboard.html?${params.toString()}`, '_blank');
+            window.open(`score/scoreboard.html?${params.toString()}`, '_blank');
         }
        // 打开比分版
         function openScoreboard2(id, homeTeam, awayTeam) {
@@ -405,8 +408,34 @@
             params.set('matchTime', matchTime);
             
             // 打开新窗口
-            window.open(`https://boliyushe.github.io/Broad/pointBorad/score/scoreboard2.html?${params.toString()}`, '_blank');
+            window.open(`score/scoreboard2.html?${params.toString()}`, '_blank');
         }
+
+        // 打开比分版
+          function openScoreboard3(id, homeTeam, awayTeam) {
+            const matchCard = event.target.closest('.match-card');
+            const matchTime = matchCard.querySelector('.match-time').textContent.trim();
+            
+            // 获取图片元素
+            const leagueLogoElement = matchCard.querySelector('.league-logo');
+            const homeTeamLogoElement = matchCard.querySelector('.team:first-child .team-logo');
+            const awayTeamLogoElement = matchCard.querySelector('.team:last-child .team-logo');
+            
+            // 保存图片数据到本地存储
+            sessionStorage.setItem('leagueLogo', leagueLogoElement.src);
+            sessionStorage.setItem('homeTeamLogo', homeTeamLogoElement.src);
+            sessionStorage.setItem('awayTeamLogo', awayTeamLogoElement.src);
+            
+            // 构建URL参数
+            const params = new URLSearchParams();
+            params.set('homeTeam', homeTeam);
+            params.set('awayTeam', awayTeam);
+            params.set('matchTime', matchTime);
+            
+            // 打开新窗口
+            window.open(`score/scoreboard3.html?${params.toString()}`, '_blank');
+        }
+
 
     </script>
 
